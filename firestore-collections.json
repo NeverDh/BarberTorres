@@ -1,0 +1,102 @@
+{
+  "collections": {
+    "users": {
+      "description": "User profiles for clients and professionals",
+      "structure": {
+        "uid": "string",
+        "name": "string",
+        "email": "string",
+        "type": "client | professional",
+        "phone": "string",
+        "createdAt": "timestamp",
+        "updatedAt": "timestamp",
+        "loyalty": "number",
+        "points": "number",
+        "specialties": ["string"],
+        "schedule": {
+          "monday": { "start": "09:00", "end": "18:00", "active": true },
+          "tuesday": { "start": "09:00", "end": "18:00", "active": true },
+          "wednesday": { "start": "09:00", "end": "18:00", "active": true },
+          "thursday": { "start": "09:00", "end": "18:00", "active": true },
+          "friday": { "start": "09:00", "end": "18:00", "active": true },
+          "saturday": { "start": "09:00", "end": "16:00", "active": true },
+          "sunday": { "start": "09:00", "end": "16:00", "active": false }
+        }
+      }
+    },
+    "appointments": {
+      "description": "Booking appointments between clients and professionals",
+      "structure": {
+        "clientId": "string",
+        "professionalId": "string",
+        "serviceId": "string",
+        "dateTime": "timestamp",
+        "status": "scheduled | completed | cancelled | no_show",
+        "price": "number",
+        "notes": "string",
+        "createdAt": "timestamp",
+        "updatedAt": "timestamp"
+      }
+    },
+    "services": {
+      "description": "Available services offered by professionals",
+      "structure": {
+        "name": "string",
+        "price": "number",
+        "duration": "number",
+        "description": "string",
+        "professionalId": "string",
+        "active": "boolean",
+        "createdAt": "timestamp"
+      }
+    },
+    "plans": {
+      "description": "Loyalty plans created by professionals",
+      "structure": {
+        "professionalId": "string",
+        "name": "string",
+        "description": "string",
+        "price": "number",
+        "serviceQuantity": "number",
+        "validityDays": "number",
+        "includedServices": ["string"],
+        "active": "boolean",
+        "createdAt": "timestamp"
+      }
+    },
+    "clientPlans": {
+      "description": "Plans purchased by clients",
+      "structure": {
+        "clientId": "string",
+        "planId": "string",
+        "purchaseDate": "timestamp",
+        "expirationDate": "timestamp",
+        "remainingServices": "number",
+        "active": "boolean",
+        "createdAt": "timestamp"
+      }
+    },
+    "reviews": {
+      "description": "Client reviews for professionals",
+      "structure": {
+        "clientId": "string",
+        "professionalId": "string",
+        "appointmentId": "string",
+        "rating": "number",
+        "comment": "string",
+        "createdAt": "timestamp"
+      }
+    },
+    "notifications": {
+      "description": "User notifications",
+      "structure": {
+        "userId": "string",
+        "title": "string",
+        "message": "string",
+        "type": "appointment | promotion | reminder",
+        "read": "boolean",
+        "createdAt": "timestamp"
+      }
+    }
+  }
+}

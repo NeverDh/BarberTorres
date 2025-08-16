@@ -9,11 +9,17 @@ import {
   ActivityIndicator 
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
+import RegisterScreen from './RegisterScreen';
 
 export default function LoginScreen() {
+  const [showRegister, setShowRegister] = useState(false);
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const { login, isLoading } = useAuth();
+
+  if (showRegister) {
+    return <RegisterScreen onBackToLogin={() => setShowRegister(false)} />;
+  }
 
   const handleLogin = async () => {
     if (!email || !senha) {
@@ -80,16 +86,33 @@ export default function LoginScreen() {
             style={styles.demoButton}
             onPress={() => preencherCredenciais('cliente')}
           >
-            <Text style={styles.demoButtonText}>Login como Cliente</Text>
+            <Text style={styles.demoButtonText}>João Cliente</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.demoButton}
+            onPress={() => {
+              setEmail('maria@cliente.com');
+              setSenha('123456');
+            }}
+          >
+            <Text style={styles.demoButtonText}>Maria Cliente</Text>
           </TouchableOpacity>
 
           <TouchableOpacity 
             style={[styles.demoButton, styles.demoButtonProfissional]}
             onPress={() => preencherCredenciais('profissional')}
           >
-            <Text style={styles.demoButtonText}>Login como Profissional</Text>
+            <Text style={styles.demoButtonText}>Pedro Barbeiro</Text>
           </TouchableOpacity>
         </View>
+
+        <TouchableOpacity 
+          style={styles.registerButton}
+          onPress={() => setShowRegister(true)}
+        >
+          <Text style={styles.registerButtonText}>Não tem conta? Cadastre-se</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -169,6 +192,16 @@ const styles = StyleSheet.create({
   demoButtonText: {
     color: 'white',
     fontSize: 14,
+    fontWeight: '600',
+  },
+  registerButton: {
+    alignItems: 'center',
+    padding: 15,
+    marginTop: 10,
+  },
+  registerButtonText: {
+    color: '#3498db',
+    fontSize: 16,
     fontWeight: '600',
   },
 });

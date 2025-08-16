@@ -8,10 +8,14 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../context/AuthContext';
-import { agendamentos, servicos, planos } from '../../data/mockData';
+import { servicos } from '../../data/mockData';
+import { getAgendamentos, getPlanos } from '../../data/memoryStore';
 
 export default function HomeProfissionalScreen({ navigation }) {
   const { usuario, logout } = useAuth();
+  
+  const agendamentos = getAgendamentos();
+  const planos = getPlanos();
   
   const agendamentosHoje = agendamentos.filter(a => 
     a.profissionalId === usuario.id && a.data === '2024-01-15'

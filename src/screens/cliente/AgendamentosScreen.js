@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../context/AuthContext';
-import { agendamentos, servicos, horariosDisponiveis } from '../../data/mockData';
+import { servicos, horariosDisponiveis } from '../../data/mockData';
+import { getAgendamentos, addAgendamento, isHorarioDisponivel } from '../../data/memoryStore';
 import { calcularPrecoComDesconto } from '../../utils/fidelidade';
 
 export default function AgendamentosScreen() {
@@ -18,8 +19,17 @@ export default function AgendamentosScreen() {
   const [selectedHorario, setSelectedHorario] = useState(null);
   const [selectedData, setSelectedData] = useState('2024-01-15');
 
+  const agendamentos = getAgendamentos();
   const agendamentosUsuario = agendamentos.filter(a => a.clienteId === usuario.id);
   const horariosData = horariosDisponiveis.find(h => h.data === selectedData);
+  
+  // Filtrar horários disponíveis
+  const horariosDisponiveis2 = horariosData ? {
+    ...horariosData,
+    horarios: horariosData.horarios.filter(h => 
+      isHorarioDisponivel(selectedData, h, horariosData.profissionalId)
+    )
+  } : null;
 
   const confirmarAgendamento = () => {
     if (!selectedServico || !selectedHorario) {
@@ -31,6 +41,19 @@ export default function AgendamentosScreen() {
     const precoFinal = calcularPrecoComDesconto(servico.preco, usuario.fidelidade);
     const desconto = servico.preco - precoFinal;
 
+    // Adicionar agendamento ao store
+    const novoAgendamento = {
+      clienteId: usuario.id,
+      profissionalId: horariosData.profissionalId,
+      servicoId: selectedServico,
+      data: selectedData,
+      horario: selectedHorario,
+      status: 'confirmado',
+      preco: precoFinal
+    };
+    
+    addAgendamento(novoAgendamento);
+    
     let mensagem = `Serviço: ${servico.nome}\nData: ${selectedData}\nHorário: ${selectedHorario}\nPreço: R$ ${precoFinal.toFixed(2)}`;
     
     if (desconto > 0) {
@@ -38,6 +61,8 @@ export default function AgendamentosScreen() {
     }
 
     Alert.alert('Agendamento Confirmado!', mensagem);
+    setSelectedServico(null);
+    setSelectedHorario(null);
   };
 
   return (
@@ -120,7 +145,7 @@ export default function AgendamentosScreen() {
 
         <Text style={styles.subTitle}>Horários Disponíveis ({selectedData}):</Text>
         <View style={styles.horariosGrid}>
-          {horariosData?.horarios.map(horario => (
+          {horariosDisponiveis2?.horarios.map(horario => (
             <TouchableOpacity
               key={horario}
               style={[

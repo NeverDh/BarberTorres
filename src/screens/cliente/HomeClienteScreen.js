@@ -8,12 +8,14 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../context/AuthContext';
-import { servicos, planos } from '../../data/mockData';
+import { servicos } from '../../data/mockData';
+import { getPlanos } from '../../data/memoryStore';
 import { getStatusFidelidade } from '../../utils/fidelidade';
 
 export default function HomeClienteScreen({ navigation }) {
   const { usuario, logout } = useAuth();
   const statusFidelidade = getStatusFidelidade(usuario.fidelidade);
+  const planos = getPlanos();
 
   return (
     <ScrollView style={styles.container}>

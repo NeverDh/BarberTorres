@@ -1,5 +1,7 @@
-import React, { createContext, useContext, useState } from 'react';
-import { usuarios } from '../data/mockData';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../config/firebase';
+import { authService } from '../services/authService';
 
 const AuthContext = createContext();
 
@@ -13,35 +15,47 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [usuario, setUsuario] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userData = await authService.getUserData(user.uid);
+        setUsuario(userData);
+      } else {
+        setUsuario(null);
+      }
+      setIsLoading(false);
+    });
+
+    return unsubscribe;
+  }, []);
 
   const login = async (email, senha) => {
     setIsLoading(true);
-    
-    // Simular delay de API
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    const usuarioEncontrado = usuarios.find(
-      u => u.email === email && u.senha === senha
-    );
-    
-    if (usuarioEncontrado) {
-      setUsuario(usuarioEncontrado);
-      setIsLoading(false);
-      return { success: true };
-    } else {
-      setIsLoading(false);
-      return { success: false, error: 'Email ou senha incorretos' };
-    }
+    const result = await authService.login(email, senha);
+    setIsLoading(false);
+    return result;
   };
 
-  const logout = () => {
-    setUsuario(null);
+  const register = async (email, senha, userData) => {
+    setIsLoading(true);
+    const result = await authService.register(email, senha, userData);
+    setIsLoading(false);
+    return result;
+  };
+
+  const logout = async () => {
+    setIsLoading(true);
+    const result = await authService.logout();
+    setIsLoading(false);
+    return result;
   };
 
   const value = {
     usuario,
     login,
+    register,
     logout,
     isLoading,
     isAuthenticated: !!usuario

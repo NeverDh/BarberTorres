@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../context/AuthContext';
+import { addPlano } from '../../data/memoryStore';
 
 export default function CriarPlanoScreen({ navigation }) {
   const { usuario, logout } = useAuth();
@@ -77,6 +78,8 @@ export default function CriarPlanoScreen({ navigation }) {
       servicos: parseInt(servicos),
       profissionalId: usuario.id
     };
+
+    addPlano(novoPlano);
 
     Alert.alert(
       'Plano Criado!',

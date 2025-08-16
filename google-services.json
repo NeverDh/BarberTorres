@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "624250634772",
+    "project_id": "naregua-3d41e",
+    "storage_bucket": "naregua-3d41e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624250634772:android:1d26e93701426ab9d6dd01",
+        "android_client_info": {
+          "package_name": "com.naregua.com"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-VQJQHvWmeCx6eOuVfMB88UOOSBndiYw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

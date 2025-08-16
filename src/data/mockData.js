@@ -8,8 +8,8 @@ export const usuarios = [
     senha: '123456',
     tipo: 'cliente',
     telefone: '(11) 99999-9999',
-    fidelidade: 3, // quantos cortes já fez
-    pontuacao: -50 // pontos negativos por faltas
+    fidelidade: 3,
+    pontuacao: -50
   },
   {
     id: 2,
@@ -19,6 +19,16 @@ export const usuarios = [
     tipo: 'profissional',
     telefone: '(11) 88888-8888',
     especialidades: ['Corte masculino', 'Barba', 'Bigode']
+  },
+  {
+    id: 3,
+    nome: 'Maria Silva',
+    email: 'maria@cliente.com',
+    senha: '123456',
+    tipo: 'cliente',
+    telefone: '(11) 77777-7777',
+    fidelidade: 1,
+    pontuacao: 0
   }
 ];
 
@@ -53,26 +63,7 @@ export const servicos = [
   }
 ];
 
-export const planos = [
-  {
-    id: 1,
-    nome: 'Plano Mensal',
-    preco: 80.00,
-    duracao: 30,
-    servicos: 3,
-    descricao: '3 cortes por mês',
-    profissionalId: 2
-  },
-  {
-    id: 2,
-    nome: 'Plano Trimestral',
-    preco: 200.00,
-    duracao: 90,
-    servicos: 10,
-    descricao: '10 cortes em 3 meses',
-    profissionalId: 2
-  }
-];
+// Planos movidos para memoryStore.js
 
 export const horariosDisponiveis = [
   {
@@ -89,19 +80,7 @@ export const horariosDisponiveis = [
   }
 ];
 
-export const agendamentos = [
-  {
-    id: 1,
-    clienteId: 1,
-    profissionalId: 2,
-    servicoId: 1,
-    data: '2024-01-15',
-    horario: '10:00',
-    status: 'confirmado', // confirmado, cancelado, concluido, faltou
-    preco: 30.00,
-    observacoes: ''
-  }
-];
+// Agendamentos movidos para memoryStore.js
 
 export const planosCliente = [
   {
