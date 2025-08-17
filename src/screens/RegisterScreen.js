@@ -10,6 +10,8 @@ import {
   ScrollView 
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
+import { ThemeSelector } from '../components/ThemeSelector';
 
 export default function RegisterScreen({ onBackToLogin }) {
   const [nome, setNome] = useState('');
@@ -19,6 +21,7 @@ export default function RegisterScreen({ onBackToLogin }) {
   const [telefone, setTelefone] = useState('');
   const [tipo] = useState('cliente');
   const { register, isLoading } = useAuth();
+  const { theme } = useTheme();
 
   const handleRegister = async () => {
     if (!nome || !email || !senha || !confirmarSenha || !telefone) {
@@ -51,23 +54,26 @@ export default function RegisterScreen({ onBackToLogin }) {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={styles.content}>
-        <Text style={styles.title}>Barber Torres</Text>
-        <Text style={styles.subtitle}>Criar conta</Text>
+        <Text style={[styles.title, { color: theme.colors.text }]}>Barber Torres</Text>
+        <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>Criar conta</Text>
 
-        <View style={styles.form}>
+        <View style={[styles.form, { backgroundColor: theme.colors.surface }]}>
+          <ThemeSelector />
           <TextInput
-            style={styles.input}
+            style={[styles.input, { borderColor: theme.colors.border, color: theme.colors.text, backgroundColor: theme.colors.background }]}
             placeholder="Nome completo"
+            placeholderTextColor={theme.colors.textSecondary}
             value={nome}
             onChangeText={setNome}
             autoCapitalize="words"
           />
 
           <TextInput
-            style={styles.input}
+            style={[styles.input, { borderColor: theme.colors.border, color: theme.colors.text, backgroundColor: theme.colors.background }]}
             placeholder="Email"
+            placeholderTextColor={theme.colors.textSecondary}
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
@@ -75,24 +81,27 @@ export default function RegisterScreen({ onBackToLogin }) {
           />
 
           <TextInput
-            style={styles.input}
+            style={[styles.input, { borderColor: theme.colors.border, color: theme.colors.text, backgroundColor: theme.colors.background }]}
             placeholder="Telefone"
+            placeholderTextColor={theme.colors.textSecondary}
             value={telefone}
             onChangeText={setTelefone}
             keyboardType="phone-pad"
           />
 
           <TextInput
-            style={styles.input}
+            style={[styles.input, { borderColor: theme.colors.border, color: theme.colors.text, backgroundColor: theme.colors.background }]}
             placeholder="Senha"
+            placeholderTextColor={theme.colors.textSecondary}
             value={senha}
             onChangeText={setSenha}
             secureTextEntry
           />
 
           <TextInput
-            style={styles.input}
+            style={[styles.input, { borderColor: theme.colors.border, color: theme.colors.text, backgroundColor: theme.colors.background }]}
             placeholder="Confirmar senha"
+            placeholderTextColor={theme.colors.textSecondary}
             value={confirmarSenha}
             onChangeText={setConfirmarSenha}
             secureTextEntry
@@ -116,7 +125,7 @@ export default function RegisterScreen({ onBackToLogin }) {
             style={styles.backButton}
             onPress={onBackToLogin}
           >
-            <Text style={styles.backButtonText}>Já tem conta? Faça login</Text>
+            <Text style={[styles.backButtonText, { color: theme.colors.primary }]}>Já tem conta? Faça login</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -127,7 +136,6 @@ export default function RegisterScreen({ onBackToLogin }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
   },
   content: {
     flex: 1,
@@ -139,17 +147,14 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: '#2c3e50',
     marginBottom: 10,
   },
   subtitle: {
     fontSize: 16,
     textAlign: 'center',
-    color: '#7f8c8d',
     marginBottom: 40,
   },
   form: {
-    backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
     shadowColor: '#000',
@@ -160,7 +165,6 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
     padding: 15,
     borderRadius: 8,
     marginBottom: 15,
@@ -184,7 +188,6 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   backButtonText: {
-    color: '#3498db',
     fontSize: 16,
     fontWeight: '600',
   },

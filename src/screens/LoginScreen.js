@@ -9,6 +9,8 @@ import {
   ActivityIndicator 
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
+import { ThemeSelector } from '../components/ThemeSelector';
 import RegisterScreen from './RegisterScreen';
 
 export default function LoginScreen() {
@@ -16,6 +18,7 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const { login, isLoading } = useAuth();
+  const { theme } = useTheme();
 
   if (showRegister) {
     return <RegisterScreen onBackToLogin={() => setShowRegister(false)} />;
@@ -45,14 +48,20 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Barber Torres</Text>
-      <Text style={styles.subtitle}>Faça seu login</Text>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <Text style={[styles.title, { color: theme.colors.text }]}>Barber Torres</Text>
+      
 
-      <View style={styles.form}>
+      <View style={[styles.form, { backgroundColor: theme.colors.surface }]}>
+        <View style={styles.unificado}>
+          <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>Login</Text>
+          <ThemeSelector />
+          
+        </View>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { borderColor: theme.colors.border, color: theme.colors.text, backgroundColor: theme.colors.background }]}
           placeholder="Email"
+          placeholderTextColor={theme.colors.textSecondary}
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
@@ -60,8 +69,9 @@ export default function LoginScreen() {
         />
 
         <TextInput
-          style={styles.input}
+          style={[styles.input, { borderColor: theme.colors.border, color: theme.colors.text, backgroundColor: theme.colors.background }]}
           placeholder="Senha"
+          placeholderTextColor={theme.colors.textSecondary}
           value={senha}
           onChangeText={setSenha}
           secureTextEntry
@@ -79,39 +89,11 @@ export default function LoginScreen() {
           )}
         </TouchableOpacity>
 
-        <View style={styles.demoSection}>
-          <Text style={styles.demoTitle}>Contas de demonstração:</Text>
-          
-          <TouchableOpacity 
-            style={styles.demoButton}
-            onPress={() => preencherCredenciais('cliente')}
-          >
-            <Text style={styles.demoButtonText}>João Cliente</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={styles.demoButton}
-            onPress={() => {
-              setEmail('maria@cliente.com');
-              setSenha('123456');
-            }}
-          >
-            <Text style={styles.demoButtonText}>Maria Cliente</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={[styles.demoButton, styles.demoButtonProfissional]}
-            onPress={() => preencherCredenciais('profissional')}
-          >
-            <Text style={styles.demoButtonText}>Pedro Barbeiro</Text>
-          </TouchableOpacity>
-        </View>
-
         <TouchableOpacity 
           style={styles.registerButton}
           onPress={() => setShowRegister(true)}
         >
-          <Text style={styles.registerButtonText}>Não tem conta? Cadastre-se</Text>
+          <Text style={[styles.registerButtonText, { color: theme.colors.primary }]}>Não tem conta? Cadastre-se</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -121,25 +103,27 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
     justifyContent: 'center',
     padding: 20,
+  },
+  unificado:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: '#2c3e50',
     marginBottom: 10,
   },
   subtitle: {
     fontSize: 16,
     textAlign: 'center',
-    color: '#7f8c8d',
-    marginBottom: 40,
+    paddingVertical: 8,
   },
   form: {
-    backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
     shadowColor: '#000',
@@ -150,7 +134,6 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
     padding: 15,
     borderRadius: 8,
     marginBottom: 15,
@@ -170,12 +153,10 @@ const styles = StyleSheet.create({
   },
   demoSection: {
     borderTopWidth: 1,
-    borderTopColor: '#eee',
     paddingTop: 20,
   },
   demoTitle: {
     fontSize: 14,
-    color: '#7f8c8d',
     textAlign: 'center',
     marginBottom: 15,
   },
@@ -200,7 +181,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   registerButtonText: {
-    color: '#3498db',
     fontSize: 16,
     fontWeight: '600',
   },

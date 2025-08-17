@@ -8,17 +8,20 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
+import { ThemeSelector } from '../../components/ThemeSelector';
 import { servicos } from '../../data/mockData';
 import { getPlanos } from '../../data/memoryStore';
 import { getStatusFidelidade } from '../../utils/fidelidade';
 
 export default function HomeClienteScreen({ navigation }) {
   const { usuario, logout } = useAuth();
+  const { theme } = useTheme();
   const statusFidelidade = getStatusFidelidade(usuario.fidelidade);
   const planos = getPlanos();
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={styles.header}>
         <View style={styles.headerContent}>
           <View>
@@ -31,11 +34,16 @@ export default function HomeClienteScreen({ navigation }) {
         </View>
       </View>
 
+      {/* Seletor de Tema */}
+      <View style={styles.themeContainer}>
+        <ThemeSelector />
+      </View>
+
       {/* Card de Fidelidade */}
-      <View style={styles.fidelidadeCard}>
-        <Text style={styles.fidelidadeTitle}>Programa de Fidelidade</Text>
-        <Text style={styles.fidelidadeText}>{statusFidelidade.mensagem}</Text>
-        <View style={styles.progressBar}>
+      <View style={[styles.fidelidadeCard, { backgroundColor: theme.colors.surface }]}>
+        <Text style={[styles.fidelidadeTitle, { color: theme.colors.text }]}>Programa de Fidelidade</Text>
+        <Text style={[styles.fidelidadeText, { color: theme.colors.textSecondary }]}>{statusFidelidade.mensagem}</Text>
+        <View style={[styles.progressBar, { backgroundColor: theme.colors.border }]}>
           <View 
             style={[
               styles.progress, 
@@ -46,7 +54,7 @@ export default function HomeClienteScreen({ navigation }) {
             ]} 
           />
         </View>
-        <Text style={styles.cortesRealizados}>
+        <Text style={[styles.cortesRealizados, { color: theme.colors.textSecondary }]}>
           Cortes realizados: {usuario.fidelidade}
         </Text>
       </View>
@@ -55,16 +63,17 @@ export default function HomeClienteScreen({ navigation }) {
       {usuario.pontuacao !== 0 && (
         <View style={[
           styles.pontuacaoCard,
+          { backgroundColor: theme.colors.surface },
           usuario.pontuacao < 0 ? styles.pontuacaoNegativa : styles.pontuacaoPositiva
         ]}>
-          <Text style={styles.pontuacaoTitle}>
+          <Text style={[styles.pontuacaoTitle, { color: theme.colors.text }]}>
             {usuario.pontuacao < 0 ? 'Penalidades' : 'Pontos'}
           </Text>
-          <Text style={styles.pontuacaoValor}>
+          <Text style={[styles.pontuacaoValor, { color: theme.colors.text }]}>
             {usuario.pontuacao > 0 ? '+' : ''}{usuario.pontuacao} pontos
           </Text>
           {usuario.pontuacao < 0 && (
-            <Text style={styles.pontuacaoDescricao}>
+            <Text style={[styles.pontuacaoDescricao, { color: theme.colors.textSecondary }]}>
               Será descontado no próximo pagamento
             </Text>
           )}
@@ -73,13 +82,13 @@ export default function HomeClienteScreen({ navigation }) {
 
       {/* Serviços */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Nossos Serviços</Text>
+        <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Nossos Serviços</Text>
         {servicos.map(servico => (
-          <View key={servico.id} style={styles.servicoCard}>
+          <View key={servico.id} style={[styles.servicoCard, { backgroundColor: theme.colors.surface }]}>
             <View style={styles.servicoInfo}>
-              <Text style={styles.servicoNome}>{servico.nome}</Text>
-              <Text style={styles.servicoDescricao}>{servico.descricao}</Text>
-              <Text style={styles.servicoDuracao}>{servico.duracao} minutos</Text>
+              <Text style={[styles.servicoNome, { color: theme.colors.text }]}>{servico.nome}</Text>
+              <Text style={[styles.servicoDescricao, { color: theme.colors.textSecondary }]}>{servico.descricao}</Text>
+              <Text style={[styles.servicoDuracao, { color: theme.colors.textSecondary }]}>{servico.duracao} minutos</Text>
             </View>
             <Text style={styles.servicoPreco}>R$ {servico.preco.toFixed(2)}</Text>
           </View>
@@ -88,14 +97,14 @@ export default function HomeClienteScreen({ navigation }) {
 
       {/* Planos */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Planos Disponíveis</Text>
+        <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Planos Disponíveis</Text>
         {planos.map(plano => (
           <TouchableOpacity 
             key={plano.id} 
-            style={styles.planoCard}
+            style={[styles.planoCard, { backgroundColor: theme.colors.surface }]}
           >
-            <Text style={styles.planoNome}>{plano.nome}</Text>
-            <Text style={styles.planoDescricao}>{plano.descricao}</Text>
+            <Text style={[styles.planoNome, { color: theme.colors.text }]}>{plano.nome}</Text>
+            <Text style={[styles.planoDescricao, { color: theme.colors.textSecondary }]}>{plano.descricao}</Text>
             <Text style={styles.planoPreco}>R$ {plano.preco.toFixed(2)}</Text>
           </TouchableOpacity>
         ))}
@@ -114,7 +123,10 @@ export default function HomeClienteScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+  },
+  themeContainer: {
+    marginHorizontal: 20,
+    marginTop: 10,
   },
   header: {
     backgroundColor: '#3498db',
@@ -142,7 +154,6 @@ const styles = StyleSheet.create({
     opacity: 0.9,
   },
   fidelidadeCard: {
-    backgroundColor: 'white',
     margin: 20,
     padding: 20,
     borderRadius: 10,
@@ -155,17 +166,14 @@ const styles = StyleSheet.create({
   fidelidadeTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#2c3e50',
     marginBottom: 10,
   },
   fidelidadeText: {
     fontSize: 14,
-    color: '#7f8c8d',
     marginBottom: 15,
   },
   progressBar: {
     height: 8,
-    backgroundColor: '#ecf0f1',
     borderRadius: 4,
     marginBottom: 10,
   },
@@ -175,7 +183,6 @@ const styles = StyleSheet.create({
   },
   cortesRealizados: {
     fontSize: 12,
-    color: '#95a5a6',
   },
   pontuacaoCard: {
     marginHorizontal: 20,
@@ -184,19 +191,16 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   pontuacaoNegativa: {
-    backgroundColor: '#ffebee',
     borderLeftWidth: 4,
     borderLeftColor: '#e74c3c',
   },
   pontuacaoPositiva: {
-    backgroundColor: '#e8f5e8',
     borderLeftWidth: 4,
     borderLeftColor: '#27ae60',
   },
   pontuacaoTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#2c3e50',
   },
   pontuacaoValor: {
     fontSize: 18,
@@ -205,7 +209,6 @@ const styles = StyleSheet.create({
   },
   pontuacaoDescricao: {
     fontSize: 12,
-    color: '#7f8c8d',
     marginTop: 5,
   },
   section: {
@@ -215,11 +218,9 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#2c3e50',
     marginBottom: 15,
   },
   servicoCard: {
-    backgroundColor: 'white',
     padding: 15,
     borderRadius: 8,
     marginBottom: 10,
@@ -233,16 +234,13 @@ const styles = StyleSheet.create({
   servicoNome: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#2c3e50',
   },
   servicoDescricao: {
     fontSize: 14,
-    color: '#7f8c8d',
     marginTop: 2,
   },
   servicoDuracao: {
     fontSize: 12,
-    color: '#95a5a6',
     marginTop: 2,
   },
   servicoPreco: {
@@ -251,7 +249,6 @@ const styles = StyleSheet.create({
     color: '#27ae60',
   },
   planoCard: {
-    backgroundColor: 'white',
     padding: 15,
     borderRadius: 8,
     marginBottom: 10,
@@ -261,11 +258,9 @@ const styles = StyleSheet.create({
   planoNome: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#2c3e50',
   },
   planoDescricao: {
     fontSize: 14,
-    color: '#7f8c8d',
     marginTop: 2,
   },
   planoPreco: {

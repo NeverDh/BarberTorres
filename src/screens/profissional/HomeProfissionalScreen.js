@@ -8,11 +8,14 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
+import { ThemeSelector } from '../../components/ThemeSelector';
 import { servicos } from '../../data/mockData';
 import { getAgendamentos, getPlanos } from '../../data/memoryStore';
 
 export default function HomeProfissionalScreen({ navigation }) {
   const { usuario, logout } = useAuth();
+  const { theme } = useTheme();
   
   const agendamentos = getAgendamentos();
   const planos = getPlanos();
@@ -28,7 +31,7 @@ export default function HomeProfissionalScreen({ navigation }) {
   const planosAtivos = planos.filter(p => p.profissionalId === usuario.id);
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={styles.header}>
         <View style={styles.headerContent}>
           <View>
@@ -41,29 +44,34 @@ export default function HomeProfissionalScreen({ navigation }) {
         </View>
       </View>
 
+      {/* Seletor de Tema */}
+      <View style={styles.themeContainer}>
+        <ThemeSelector />
+      </View>
+
       {/* Cards de Estatísticas */}
       <View style={styles.statsContainer}>
-        <View style={styles.statCard}>
-          <Text style={styles.statNumber}>{agendamentosHoje.length}</Text>
-          <Text style={styles.statLabel}>Agendamentos Hoje</Text>
+        <View style={[styles.statCard, { backgroundColor: theme.colors.surface }]}>
+          <Text style={[styles.statNumber, { color: theme.colors.text }]}>{agendamentosHoje.length}</Text>
+          <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>Agendamentos Hoje</Text>
         </View>
         
-        <View style={styles.statCard}>
-          <Text style={styles.statNumber}>R$ {totalReceita.toFixed(2)}</Text>
-          <Text style={styles.statLabel}>Receita Total</Text>
+        <View style={[styles.statCard, { backgroundColor: theme.colors.surface }]}>
+          <Text style={[styles.statNumber, { color: theme.colors.text }]}>R$ {totalReceita.toFixed(2)}</Text>
+          <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>Receita Total</Text>
         </View>
       </View>
 
       {/* Agendamentos de Hoje */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Agendamentos de Hoje</Text>
+        <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Agendamentos de Hoje</Text>
         {agendamentosHoje.length === 0 ? (
-          <Text style={styles.emptyText}>Nenhum agendamento para hoje</Text>
+          <Text style={[styles.emptyText, { color: theme.colors.textSecondary, backgroundColor: theme.colors.surface }]}>Nenhum agendamento para hoje</Text>
         ) : (
           agendamentosHoje.map(agendamento => (
-            <View key={agendamento.id} style={styles.agendamentoCard}>
+            <View key={agendamento.id} style={[styles.agendamentoCard, { backgroundColor: theme.colors.surface }]}>
               <View style={styles.agendamentoHeader}>
-                <Text style={styles.agendamentoHorario}>{agendamento.horario}</Text>
+                <Text style={[styles.agendamentoHorario, { color: theme.colors.text }]}>{agendamento.horario}</Text>
                 <Text style={[
                   styles.status,
                   agendamento.status === 'confirmado' ? styles.confirmado : styles.concluido
@@ -71,7 +79,7 @@ export default function HomeProfissionalScreen({ navigation }) {
                   {agendamento.status.toUpperCase()}
                 </Text>
               </View>
-              <Text style={styles.agendamentoServico}>
+              <Text style={[styles.agendamentoServico, { color: theme.colors.text }]}>
                 {servicos.find(s => s.id === agendamento.servicoId)?.nome}
               </Text>
               <Text style={styles.agendamentoPreco}>
@@ -85,7 +93,7 @@ export default function HomeProfissionalScreen({ navigation }) {
       {/* Meus Planos */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Meus Planos</Text>
+          <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Meus Planos</Text>
           <TouchableOpacity 
             style={styles.addButton}
             onPress={() => navigation.navigate('CriarPlano')}
@@ -95,9 +103,9 @@ export default function HomeProfissionalScreen({ navigation }) {
         </View>
         
         {planosAtivos.map(plano => (
-          <View key={plano.id} style={styles.planoCard}>
-            <Text style={styles.planoNome}>{plano.nome}</Text>
-            <Text style={styles.planoDescricao}>{plano.descricao}</Text>
+          <View key={plano.id} style={[styles.planoCard, { backgroundColor: theme.colors.surface }]}>
+            <Text style={[styles.planoNome, { color: theme.colors.text }]}>{plano.nome}</Text>
+            <Text style={[styles.planoDescricao, { color: theme.colors.textSecondary }]}>{plano.descricao}</Text>
             <Text style={styles.planoPreco}>R$ {plano.preco.toFixed(2)}</Text>
           </View>
         ))}
@@ -126,7 +134,10 @@ export default function HomeProfissionalScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+  },
+  themeContainer: {
+    marginHorizontal: 20,
+    marginTop: 10,
   },
   header: {
     backgroundColor: '#e67e22',
@@ -160,7 +171,6 @@ const styles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
@@ -173,11 +183,9 @@ const styles = StyleSheet.create({
   statNumber: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#2c3e50',
   },
   statLabel: {
     fontSize: 14,
-    color: '#7f8c8d',
     marginTop: 5,
     textAlign: 'center',
   },
@@ -194,7 +202,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#2c3e50',
   },
   addButton: {
     backgroundColor: '#27ae60',
@@ -209,14 +216,11 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    color: '#7f8c8d',
     textAlign: 'center',
     padding: 20,
-    backgroundColor: 'white',
     borderRadius: 8,
   },
   agendamentoCard: {
-    backgroundColor: 'white',
     padding: 15,
     borderRadius: 8,
     marginBottom: 10,
@@ -235,7 +239,6 @@ const styles = StyleSheet.create({
   agendamentoHorario: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#2c3e50',
   },
   status: {
     fontSize: 12,
@@ -254,7 +257,6 @@ const styles = StyleSheet.create({
   },
   agendamentoServico: {
     fontSize: 16,
-    color: '#34495e',
     marginBottom: 5,
   },
   agendamentoPreco: {
@@ -263,7 +265,6 @@ const styles = StyleSheet.create({
     color: '#27ae60',
   },
   planoCard: {
-    backgroundColor: 'white',
     padding: 15,
     borderRadius: 8,
     marginBottom: 10,
@@ -273,11 +274,9 @@ const styles = StyleSheet.create({
   planoNome: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#2c3e50',
   },
   planoDescricao: {
     fontSize: 14,
-    color: '#7f8c8d',
     marginTop: 2,
   },
   planoPreco: {

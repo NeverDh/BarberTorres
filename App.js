@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 
 import { AuthProvider, useAuth } from './src/context/AuthContext';
+import { ThemeProvider, useTheme } from './src/context/ThemeContext';
 import LoginScreen from './src/screens/LoginScreen';
 
 // Telas do Cliente
@@ -100,25 +101,42 @@ function ProfissionalTabs() {
 
 function AppNavigator() {
   const { usuario, isAuthenticated } = useAuth();
+  const { isDark } = useTheme();
 
   if (!isAuthenticated) {
-    return <LoginScreen />;
+    return (
+      <>
+        <StatusBar style={isDark ? 'light' : 'dark'} />
+        <LoginScreen />
+      </>
+    );
   }
 
   if (usuario.tipo === 'cliente') {
-    return <ClienteTabs />;
+    return (
+      <>
+        <StatusBar style={isDark ? 'light' : 'dark'} />
+        <ClienteTabs />
+      </>
+    );
   } else {
-    return <ProfissionalTabs />;
+    return (
+      <>
+        <StatusBar style={isDark ? 'light' : 'dark'} />
+        <ProfissionalTabs />
+      </>
+    );
   }
 }
 
 export default function App() {
   return (
-    <AuthProvider>
-      <NavigationContainer>
-        <StatusBar style="auto" />
-        <AppNavigator />
-      </NavigationContainer>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <NavigationContainer>
+          <AppNavigator />
+        </NavigationContainer>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
